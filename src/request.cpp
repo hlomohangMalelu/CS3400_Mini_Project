@@ -6,7 +6,7 @@ using namespace std;
 // Default constructor
 Request::Request() {
     requestID = 0;
-    userID = 0;
+    userID = "";
     resourceID = 0;
     resourceType = "";
     requestDate = "";
@@ -15,7 +15,7 @@ Request::Request() {
 }
 
 // Parameterized constructor
-Request::Request(int rid, int uid, int resid, string type, string date, int p, RequestStatus s) {
+Request::Request(int rid, string uid, int resid, string type, string date, int p, RequestStatus s) {
     requestID = rid;
     userID = uid;
     resourceID = resid;
@@ -30,7 +30,7 @@ int Request::getRequestID() const {
     return requestID;
 }
 
-int Request::getUserID() const {
+string Request::getUserID() const {
     return userID;
 }
 
@@ -59,7 +59,7 @@ void Request::setRequestID(int rid) {
     requestID = rid;
 }
 
-void Request::setUserID(int uid) {
+void Request::setUserID(string uid) {
     userID = uid;
 }
 
