@@ -40,8 +40,7 @@ HashTable::~HashTable() {
     }
 }
 
-void HashTable::tapCard(string id, string session,
-                        string faculty, int priority) {
+void HashTable::tapCard(string id, string session, string faculty, int priority) {
     Student* student = findStudent(id);
 
     if (student != nullptr) {
@@ -160,8 +159,7 @@ void HashTable::checkout(string id) {
 bool HashTable::isRegistered(string id) {
     Student* student = findStudent(id);
 
-    return student != nullptr &&
-           student->status != CHECKED_OUT;
+    return student != nullptr && student->status != CHECKED_OUT;
 }
 
 bool HashTable::isInside(string id) {
