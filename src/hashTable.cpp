@@ -1,4 +1,4 @@
-#include "HashTable.h"
+#include "../include/hashTable.h"
 
 HashTable::HashTable() {
     for (int i = 0; i < TABLE_SIZE; i++)
