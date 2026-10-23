@@ -15,7 +15,7 @@ enum RequestStatus {
 class Request {
 private:
     int requestID;
-    int userID;
+    string userID;
     int resourceID;
     string resourceType;
     string requestDate;
@@ -26,13 +26,11 @@ public:
     // Constructors
     Request();
 
-    Request(int rid, int uid, int resid,
-            string type, string date,
-            int p, RequestStatus s = PENDING);
+    Request(int rid, string uid, int resid, string type, string date,int p, RequestStatus s = PENDING);
 
     // Getters
     int getRequestID() const;
-    int getUserID() const;
+    string getUserID() const;
     int getResourceID() const;
     string getResourceType() const;
     string getRequestDate() const;
@@ -41,7 +39,7 @@ public:
 
     // Setters
     void setRequestID(int rid);
-    void setUserID(int uid);
+    void setUserID(string uid);
     void setResourceID(int resid);
     void setResourceType(string type);
     void setRequestDate(string date);
