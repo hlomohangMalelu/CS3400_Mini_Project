@@ -1,4 +1,6 @@
 #include "../include/graph.h"
+#include <fstream>
+#include <sstream>
 
 Graph::Graph() {
     zoneCount = 0;
@@ -176,4 +178,133 @@ void Graph::showZones() {
 
         cout << endl;
     }
+}
+
+void Graph::saveToFile(string filename) {
+    ofstream file(filename);
+
+    if (!file.is_open()) {
+        cout << "ERROR: Cannot open " << filename << endl;
+        cout << "Check the current working directory and file permissions.\n";
+        return;
+    }
+
+    cout << "File opened successfully!\n";
+
+    for (int i = 0; i < zoneCount; i++) {
+        file << "ZONE,"
+             << zones[i].name << ","
+             << zones[i].allowedFaculty << ","
+             << zones[i].occupancy << "\n";
+    }
+
+    for (int i = 0; i < zoneCount; i++) {
+        Edge* current = zones[i].edges;
+
+        while (current != nullptr) {
+            int destination = current->destination;
+
+            if (i < destination) {
+                file << "EDGE,"
+                     << zones[i].name << ","
+                     << zones[destination].name << "\n";
+            }
+
+            current = current->next;
+        }
+    }
+
+    file.close();
+
+    cout << "Zones saved successfully.\n";
+}
+
+void Graph::loadFromFile(string filename) {
+    ifstream file(filename);
+
+    if (!file.is_open()) {
+        cout << "Zones file not found. Starting with empty zones.\n";
+        return;
+    }
+
+    // Remove old connections
+    for (int i = 0; i < zoneCount; i++) {
+        Edge* current = zones[i].edges;
+
+        while (current != nullptr) {
+            Edge* temp = current;
+            current = current->next;
+            delete temp;
+        }
+
+        zones[i].edges = nullptr;
+    }
+
+    // Clear the existing zones
+    zoneCount = 0;
+
+    string line;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+
+        string recordType;
+        getline(ss, recordType, ',');
+
+        if (recordType == "ZONE") {
+            string name;
+            string faculty;
+            string occupancyText;
+
+            getline(ss, name, ',');
+            getline(ss, faculty, ',');
+            getline(ss, occupancyText, ',');
+
+            if (zoneCount < 100 && findZone(name) == -1) {
+                zones[zoneCount].name = name;
+                zones[zoneCount].allowedFaculty = faculty;
+                zones[zoneCount].occupancy = stoi(occupancyText);
+                zones[zoneCount].edges = nullptr;
+
+                zoneCount++;
+            }
+        }
+        else if (recordType == "EDGE") {
+            string first;
+            string second;
+
+            getline(ss, first, ',');
+            getline(ss, second, ',');
+
+            int a = findZone(first);
+            int b = findZone(second);
+
+            if (a != -1 && b != -1 && a != b) {
+                // Check whether the connection already exists
+                bool exists = false;
+                Edge* current = zones[a].edges;
+
+                while (current != nullptr) {
+                    if (current->destination == b) {
+                        exists = true;
+                        break;
+                    }
+
+                    current = current->next;
+                }
+
+                if (!exists) {
+                    Edge* edgeA = new Edge(b);
+                    edgeA->next = zones[a].edges;
+                    zones[a].edges = edgeA;
+
+                    Edge* edgeB = new Edge(a);
+                    edgeB->next = zones[b].edges;
+                    zones[b].edges = edgeB;
+                }
+            }
+        }
+    }
+
+    file.close();
 }
