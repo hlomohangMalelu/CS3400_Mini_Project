@@ -41,6 +41,9 @@ public:
     bool enterZone(string zone, string faculty);
     bool leaveZone(string zone);
     void showZones();
+
+    void saveToFile(string filename);
+    void loadFromFile(string filename); 
 };
 
 #endif
