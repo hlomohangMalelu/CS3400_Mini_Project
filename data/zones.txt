@@ -1,0 +1,2 @@
+ZONE,mofolo,ALL,0
+ZONE,bathroom,ALL,0
